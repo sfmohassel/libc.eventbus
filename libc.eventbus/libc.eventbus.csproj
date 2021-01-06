@@ -2,21 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>3.0.0.0</Version>
+    <Version>4.0.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Saeid Farahi Mohassel</Authors>
+    <Authors>Saeed Farahi Mohassel</Authors>
     <Product>An in-memory event bus for services to communicate in-process</Product>
     <RepositoryUrl>https://github.com/saeidjoker/libc.eventbus</RepositoryUrl>
-    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\out\</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.2.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
 
 </Project>
