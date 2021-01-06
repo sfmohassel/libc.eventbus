@@ -1,4 +1,4 @@
-# An in-memory C# event bus without any dependency
+# An in-memory event bus without any dependency in C#
 
 ## Why bother?
 In Domain-Driven Design (DDD) pattern, there are times when we want to inform other parts of application about occurrence of an event. This is the primary goal of [DOMAIN EVENTS](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#:~:text=A%20domain%20event%20is%2C%20something,effects%20can%20be%20expressed%20explicitly.)
