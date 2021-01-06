@@ -8,6 +8,7 @@
     <Product>An in-memory event bus for services to communicate in-process</Product>
     <RepositoryUrl>https://github.com/saeidjoker/libc.eventbus</RepositoryUrl>
     <LangVersion>8.0</LangVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
