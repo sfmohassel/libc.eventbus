@@ -2,10 +2,10 @@
 using libc.eventbus.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace libc.eventbus.tests {
+
     [TestClass]
     public class ShowCase {
         [TestMethod]
@@ -52,7 +52,7 @@ namespace libc.eventbus.tests {
         }
 
         public class SimpleMessage : IEvent {
-            public string Text { get; private set; }
+            public string Text { get; }
 
             public SimpleMessage(string text) {
                 Text = text;
@@ -63,6 +63,7 @@ namespace libc.eventbus.tests {
             public Task Handle(SimpleMessage ev) {
                 // print message
                 Console.WriteLine($"Raw: {ev.Text}");
+
                 return Task.CompletedTask;
             }
         }
@@ -71,6 +72,7 @@ namespace libc.eventbus.tests {
             public Task Handle(SimpleMessage ev) {
                 // print message
                 Console.WriteLine($"Pretty: {ev.Text}");
+
                 return Task.CompletedTask;
             }
         }
@@ -90,8 +92,10 @@ namespace libc.eventbus.tests {
                 } else if (ev is PrivateMessage) {
                     Console.WriteLine($"Caught PrivateMessage: {(ev as PrivateMessage).Secret}");
                 }
+
                 return Task.CompletedTask;
             }
         }
     }
+
 }

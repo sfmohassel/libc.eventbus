@@ -83,7 +83,6 @@ namespace libc.eventbus.System {
         /// <inheritdoc/>
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
-        /// <param name="eventType"></param>
         /// <returns></returns>
         public override IEnumerable<IEventHandler<TEvent>> GetHandlers<TEvent>() {
             return cache.GetHandlers<TEvent>();
@@ -169,6 +168,7 @@ namespace libc.eventbus.System {
                     }
                     Handlers?.Clear();
                 } catch {
+                    // ignored
                 } finally {
                     disposed = true;
                 }
