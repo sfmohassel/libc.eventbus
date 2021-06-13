@@ -1,40 +1,41 @@
-﻿using libc.eventbus.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using libc.eventbus.Types;
 
-namespace libc.eventbus.System {
+namespace libc.eventbus.System
+{
     /// <summary>
-    /// Implement to have a sink to allow other parts of application to subscribe to events
+    ///     Implement to have a sink to allow other parts of application to subscribe to events
     /// </summary>
-    public interface IEventSink : IDisposable {
-
+    public interface IEventSink : IDisposable
+    {
         /// <summary>
-        /// Registers catch-all event handlers
+        ///     Registers catch-all event handlers
         /// </summary>
         /// <param name="handlers"></param>
         void RegisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers);
 
         /// <summary>
-        /// Registers a catch-all event handler
+        ///     Registers a catch-all event handler
         /// </summary>
         /// <param name="handlers"></param>
         void RegisterCatchAllHandler(ICatchAllEventHandler handler);
 
         /// <summary>
-        /// Unregisters given catch-all event handlers
+        ///     Unregisters given catch-all event handlers
         /// </summary>
         /// <param name="handlers"></param>
         void UnregisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers);
 
         /// <summary>
-        /// Unregisters given catch-all event handler
+        ///     Unregisters given catch-all event handler
         /// </summary>
         /// <param name="handlers"></param>
         void UnregisterCatchAllHandler(ICatchAllEventHandler handler);
 
         /// <summary>
-        /// Subscribe your handlers to an event.
-        /// If a handler instance is equal to one defined before, this method SHOULD overwrite previous one
+        ///     Subscribe your handlers to an event.
+        ///     If a handler instance is equal to one defined before, this method SHOULD overwrite previous one
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <typeparam name="TEventHandler"></typeparam>
@@ -44,8 +45,8 @@ namespace libc.eventbus.System {
             where TEventHandler : IEventHandler<TEvent>;
 
         /// <summary>
-        /// Subscribe your handler to an event.
-        /// If a handler instance is equal to one defined before, this method SHOULD overwrite previous one
+        ///     Subscribe your handler to an event.
+        ///     If a handler instance is equal to one defined before, this method SHOULD overwrite previous one
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <typeparam name="TEventHandler"></typeparam>
@@ -55,7 +56,7 @@ namespace libc.eventbus.System {
             where TEventHandler : IEventHandler<TEvent>;
 
         /// <summary>
-        /// Unsubscribe your handlers from an event
+        ///     Unsubscribe your handlers from an event
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <typeparam name="TEventHandler"></typeparam>
@@ -65,7 +66,7 @@ namespace libc.eventbus.System {
             where TEventHandler : IEventHandler<TEvent>;
 
         /// <summary>
-        /// Unsubscribe your handler from an event
+        ///     Unsubscribe your handler from an event
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <typeparam name="TEventHandler"></typeparam>

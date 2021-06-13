@@ -1,14 +1,16 @@
-﻿using libc.eventbus.System;
+﻿using System.Linq;
+using libc.eventbus.System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
 using static libc.eventbus.tests.SimpleHandlerTests;
 
-namespace libc.eventbus.tests {
+namespace libc.eventbus.tests
+{
     [TestClass]
-    public class SubscriptionTests {
+    public class SubscriptionTests
+    {
         [TestMethod]
-        public void Subscribe_Unsubscribe() {
+        public void Subscribe_Unsubscribe()
+        {
             var bus = new DefaultEventBus();
             var handler = new LogEventHandler1(null);
             bus.Subscribe<LogEvent, LogEventHandler1>(handler);
@@ -26,7 +28,8 @@ namespace libc.eventbus.tests {
         }
 
         [TestMethod]
-        public void Register_Unregister() {
+        public void Register_Unregister()
+        {
             var bus = new DefaultEventBus();
             var handler = new CatchAllHandler(null, null);
             bus.RegisterCatchAllHandler(handler);

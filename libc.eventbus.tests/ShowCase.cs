@@ -1,15 +1,17 @@
-﻿using libc.eventbus.System;
+﻿using System;
+using System.Threading.Tasks;
+using libc.eventbus.System;
 using libc.eventbus.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading.Tasks;
 
-namespace libc.eventbus.tests {
-
+namespace libc.eventbus.tests
+{
     [TestClass]
-    public class ShowCase {
+    public class ShowCase
+    {
         [TestMethod]
-        public void Showcase_WithoutCatchAll() {
+        public void Showcase_WithoutCatchAll()
+        {
             // 1- create an event bus
             var bus = new DefaultEventBus();
 
@@ -31,7 +33,8 @@ namespace libc.eventbus.tests {
         }
 
         [TestMethod]
-        public void Showcase_WithCatchAll() {
+        public void Showcase_WithCatchAll()
+        {
             // 1- create an event bus
             var bus = new DefaultEventBus();
 
@@ -51,16 +54,20 @@ namespace libc.eventbus.tests {
             bus.Publish(message);
         }
 
-        public class SimpleMessage : IEvent {
-            public string Text { get; }
-
-            public SimpleMessage(string text) {
+        public class SimpleMessage : IEvent
+        {
+            public SimpleMessage(string text)
+            {
                 Text = text;
             }
+
+            public string Text { get; }
         }
 
-        public class PrintMessageRaw : IEventHandler<SimpleMessage> {
-            public Task Handle(SimpleMessage ev) {
+        public class PrintMessageRaw : IEventHandler<SimpleMessage>
+        {
+            public Task Handle(SimpleMessage ev)
+            {
                 // print message
                 Console.WriteLine($"Raw: {ev.Text}");
 
@@ -68,8 +75,10 @@ namespace libc.eventbus.tests {
             }
         }
 
-        public class PrintMessagePretty : IEventHandler<SimpleMessage> {
-            public Task Handle(SimpleMessage ev) {
+        public class PrintMessagePretty : IEventHandler<SimpleMessage>
+        {
+            public Task Handle(SimpleMessage ev)
+            {
                 // print message
                 Console.WriteLine($"Pretty: {ev.Text}");
 
@@ -77,25 +86,27 @@ namespace libc.eventbus.tests {
             }
         }
 
-        public class PrivateMessage : IEvent {
-            public string Secret { get; private set; }
-
-            public PrivateMessage(string secret) {
+        public class PrivateMessage : IEvent
+        {
+            public PrivateMessage(string secret)
+            {
                 Secret = secret;
             }
+
+            public string Secret { get; private set; }
         }
 
-        public class CatchAllMessages : ICatchAllEventHandler {
-            public Task Handle(IEvent ev) {
-                if (ev is SimpleMessage) {
+        public class CatchAllMessages : ICatchAllEventHandler
+        {
+            public Task Handle(IEvent ev)
+            {
+                if (ev is SimpleMessage)
                     Console.WriteLine($"Caught SimpleMessage: {(ev as SimpleMessage).Text}");
-                } else if (ev is PrivateMessage) {
+                else if (ev is PrivateMessage)
                     Console.WriteLine($"Caught PrivateMessage: {(ev as PrivateMessage).Secret}");
-                }
 
                 return Task.CompletedTask;
             }
         }
     }
-
 }

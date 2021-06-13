@@ -1,7 +1,9 @@
-﻿namespace libc.eventbus.Types {
+﻿namespace libc.eventbus.Types
+{
     /// <summary>
-    /// Each event must implement this
+    ///     Each event must implement this
     /// </summary>
-    public interface IEvent {
+    public interface IEvent
+    {
     }
 }
