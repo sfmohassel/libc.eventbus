@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace libc.eventbus.tests
 {
     [TestClass]
-    public class Showcase_medium
+    public class Showcase2
     {
         [TestMethod]
         public void Showcase()
@@ -35,7 +35,7 @@ namespace libc.eventbus.tests
 
         public class UserService
         {
-            private readonly ICollection<User> db = new List<User>
+            private readonly ICollection<User> _db = new List<User>
             {
                 new User
                 {
@@ -44,26 +44,26 @@ namespace libc.eventbus.tests
                 }
             };
 
-            private readonly IEventEmitter eventEmitter;
+            private readonly IEventEmitter _eventEmitter;
 
             public UserService(IEventEmitter eventEmitter)
             {
-                this.eventEmitter = eventEmitter;
+                _eventEmitter = eventEmitter;
             }
 
             public void GotMarried(string userId)
             {
-                var user = db.First(a => a.Id.Equals(userId));
+                var user = _db.First(a => a.Id.Equals(userId));
                 user.IsMarried = true;
 
                 // propagate changes to other parts of the code
-                eventEmitter.Publish(new MaritalStatusChanged(userId, true));
+                _eventEmitter.Publish(new MaritalStatusChanged(userId, true));
             }
         }
 
         public class ResumeService
         {
-            private readonly ICollection<Resume> db = new List<Resume>
+            private readonly ICollection<Resume> _db = new List<Resume>
             {
                 new Resume
                 {
@@ -75,23 +75,23 @@ namespace libc.eventbus.tests
 
             public void SetMaritalStatus(string userId, bool isMarried)
             {
-                foreach (var resume in db.Where(a => a.UserId.Equals(userId))) resume.IsUserMarried = isMarried;
+                foreach (var resume in _db.Where(a => a.UserId.Equals(userId))) resume.IsUserMarried = isMarried;
 
                 Console.WriteLine($"{userId} is {(isMarried ? "married" : "single")} now");
             }
 
             public class MaritalStatusChangedHandler : IEventHandler<MaritalStatusChanged>
             {
-                private readonly ResumeService service;
+                private readonly ResumeService _service;
 
                 public MaritalStatusChangedHandler(ResumeService service)
                 {
-                    this.service = service;
+                    _service = service;
                 }
 
                 public Task Handle(MaritalStatusChanged ev)
                 {
-                    service.SetMaritalStatus(ev.UserId, ev.IsMarried);
+                    _service.SetMaritalStatus(ev.UserId, ev.IsMarried);
 
                     return Task.CompletedTask;
                 }
@@ -100,7 +100,7 @@ namespace libc.eventbus.tests
 
         public class StoreService
         {
-            private readonly ICollection<Store> db = new List<Store>
+            private readonly ICollection<Store> _db = new List<Store>
             {
                 new Store
                 {
@@ -112,23 +112,23 @@ namespace libc.eventbus.tests
 
             public void SetMaritalStatus(string userId, bool isMarried)
             {
-                foreach (var store in db.Where(a => a.OwnerId.Equals(userId))) store.IsOwnerMarried = isMarried;
+                foreach (var store in _db.Where(a => a.OwnerId.Equals(userId))) store.IsOwnerMarried = isMarried;
 
                 Console.WriteLine($"{userId} is {(isMarried ? "married" : "single")} now");
             }
 
             public class MaritalStatusChangedHandler : IEventHandler<MaritalStatusChanged>
             {
-                private readonly StoreService service;
+                private readonly StoreService _service;
 
                 public MaritalStatusChangedHandler(StoreService service)
                 {
-                    this.service = service;
+                    _service = service;
                 }
 
                 public Task Handle(MaritalStatusChanged ev)
                 {
-                    service.SetMaritalStatus(ev.UserId, ev.IsMarried);
+                    _service.SetMaritalStatus(ev.UserId, ev.IsMarried);
 
                     return Task.CompletedTask;
                 }

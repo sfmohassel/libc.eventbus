@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace libc.eventbus.tests
 {
     [TestClass]
-    public class ShowCase
+    public class Showcase
     {
         [TestMethod]
         public void Showcase_WithoutCatchAll()
