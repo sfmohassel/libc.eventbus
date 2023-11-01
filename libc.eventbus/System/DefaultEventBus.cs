@@ -21,7 +21,7 @@ namespace libc.eventbus.System
     ///     <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
-    public override void RegisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers)
+    public override void RegisterCatchAllHandler(params ICatchAllEventHandler[] handlers)
     {
       if (handlers == null) return;
 
@@ -32,7 +32,7 @@ namespace libc.eventbus.System
     ///     <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
-    public override void UnregisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers)
+    public override void UnregisterCatchAllHandler(params ICatchAllEventHandler[] handlers)
     {
       if (handlers == null) return;
 
@@ -45,7 +45,7 @@ namespace libc.eventbus.System
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
-    public override void Subscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
+    public override void Subscribe<TEvent, TEventHandler>(params TEventHandler[] handlers)
     {
       if (handlers == null) return;
 
@@ -58,7 +58,7 @@ namespace libc.eventbus.System
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
-    public override void Unsubscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
+    public override void Unsubscribe<TEvent, TEventHandler>(params TEventHandler[] handlers)
     {
       if (handlers == null) return;
 
@@ -162,10 +162,10 @@ namespace libc.eventbus.System
 
       public IEnumerable<IEventHandler<TEvent>> GetHandlers<TEvent>() where TEvent : IEvent
       {
-        if (_disposing || _disposed) return new IEventHandler<TEvent>[0];
+        if (_disposing || _disposed) return Array.Empty<IEventHandler<TEvent>>();
         var type = typeof(TEvent);
 
-        if (!Handlers.ContainsKey(type)) return new IEventHandler<TEvent>[0];
+        if (!Handlers.ContainsKey(type)) return Array.Empty<IEventHandler<TEvent>>();
 
         return Handlers[type].Keys.OfType<IEventHandler<TEvent>>();
       }
