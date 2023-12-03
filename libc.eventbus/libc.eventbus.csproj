@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>7.0.0</Version>
+    <Version>7.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Saeed Farahi Mohassel</Authors>
     <Product>An in-memory event bus for services to communicate in-process</Product>
