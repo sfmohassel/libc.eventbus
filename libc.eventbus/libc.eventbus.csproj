@@ -9,7 +9,12 @@
     <LangVersion>8.0</LangVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\out\</OutputPath>
