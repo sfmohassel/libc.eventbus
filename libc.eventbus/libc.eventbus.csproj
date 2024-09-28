@@ -6,7 +6,7 @@
     <Authors>Saeed Farahi Mohassel</Authors>
     <Product>An in-memory event bus for services to communicate in-process</Product>
     <RepositoryUrl>https://github.com/sfmohassel/libc.eventbus</RepositoryUrl>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <PackageReadmeFile>README.md</PackageReadmeFile>

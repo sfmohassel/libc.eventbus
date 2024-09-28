@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace libc.eventbus.System
+namespace libc.eventbus.System;
+
+/// <summary>
+///     An abstract event-bus that implements both <see cref="IEventEmitter" /> and <see cref="IEventSink" />
+///     Implement this to have your own bus :-)
+/// </summary>
+public abstract class EventBus : IEventEmitter, IEventSink
 {
-  /// <summary>
-  ///     An abstract event-bus that implements both <see cref="IEventEmitter" /> and <see cref="IEventSink" />
-  ///     Implement this to have your own bus :-)
-  /// </summary>
-  public abstract class EventBus : IEventEmitter, IEventSink
-  {
     /// <summary>
     ///     <inheritdoc />
     /// </summary>
@@ -19,62 +19,63 @@ namespace libc.eventbus.System
     /// <param name="ev"></param>
     public EventPublishResult<TEvent> Publish<TEvent>(TEvent ev) where TEvent : IEvent
     {
-      return PublishAsync(ev).Result;
+        return PublishAsync(ev).Result;
     }
 
     public async Task<EventPublishResult<TEvent>> PublishAsync<TEvent>(TEvent ev) where TEvent : IEvent
     {
-      var handlerResults = new List<EventPublishHandlerResult<TEvent>>();
-      var catchAllResults = new List<EventPublishCatchAllHandlerResult>();
+        var handlerResults = new List<EventPublishHandlerResult<TEvent>>();
+        var catchAllResults = new List<EventPublishCatchAllHandlerResult>();
 
-      var handlers = GetHandlers<TEvent>().ToArray();
-      var catchAllHandlers = GetCatchAllHandlers().ToArray();
-      var start = DateTime.UtcNow;
+        var handlers = GetHandlers<TEvent>().ToArray();
+        var catchAllHandlers = GetCatchAllHandlers().ToArray();
+        var start = DateTime.UtcNow;
 
-      foreach (var handler in handlers)
-      {
-        EventPublishHandlerResult<TEvent> x = null;
-
-        try
+        foreach (var handler in handlers)
         {
-          await handler.Handle(ev);
-          x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.Executed, null);
-        }
-        catch (Exception ex)
-        {
-          x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.UnhandledException, ex);
-        }
-        finally
-        {
-          handlerResults.Add(x);
-        }
-      }
+            EventPublishHandlerResult<TEvent> x = null;
 
-      // execute catch-all handlers
-      foreach (var handler in catchAllHandlers)
-      {
-        EventPublishCatchAllHandlerResult x = null;
-
-        try
-        {
-          await handler.Handle(ev);
-          x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.Executed, null);
+            try
+            {
+                await handler.Handle(ev);
+                x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.Executed, null);
+            }
+            catch (Exception ex)
+            {
+                x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.UnhandledException,
+                    ex);
+            }
+            finally
+            {
+                handlerResults.Add(x);
+            }
         }
-        catch (Exception ex)
-        {
-          x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.UnhandledException,
-              ex);
-        }
-        finally
-        {
-          catchAllResults.Add(x);
-        }
-      }
 
-      // store end time
-      var end = DateTime.UtcNow;
+        // execute catch-all handlers
+        foreach (var handler in catchAllHandlers)
+        {
+            EventPublishCatchAllHandlerResult x = null;
 
-      return new EventPublishResult<TEvent>(handlerResults.ToArray(), catchAllResults.ToArray(), start, end);
+            try
+            {
+                await handler.Handle(ev);
+                x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.Executed, null);
+            }
+            catch (Exception ex)
+            {
+                x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.UnhandledException,
+                    ex);
+            }
+            finally
+            {
+                catchAllResults.Add(x);
+            }
+        }
+
+        // store end time
+        var end = DateTime.UtcNow;
+
+        return new EventPublishResult<TEvent>(handlerResults.ToArray(), catchAllResults.ToArray(), start, end);
     }
 
     /// <summary>
@@ -83,7 +84,7 @@ namespace libc.eventbus.System
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
-    public abstract void Subscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
+    public abstract void Subscribe<TEvent, TEventHandler>(params TEventHandler[] handlers)
         where TEvent : IEvent
         where TEventHandler : IEventHandler<TEvent>;
 
@@ -92,86 +93,22 @@ namespace libc.eventbus.System
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
-    /// <param name="handler"></param>
-    public void Subscribe<TEvent, TEventHandler>(TEventHandler handler)
-        where TEvent : IEvent
-        where TEventHandler : IEventHandler<TEvent>
-    {
-      if (handler == null) return;
-
-      Subscribe<TEvent, TEventHandler>(new[]
-      {
-                handler
-            });
-    }
-
-    /// <summary>
-    ///     <inheritdoc />
-    /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
-    public abstract void Unsubscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
+    public abstract void Unsubscribe<TEvent, TEventHandler>(params TEventHandler[] handlers)
         where TEvent : IEvent
         where TEventHandler : IEventHandler<TEvent>;
 
     /// <summary>
     ///     <inheritdoc />
     /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <typeparam name="TEventHandler"></typeparam>
-    /// <param name="handler"></param>
-    public void Unsubscribe<TEvent, TEventHandler>(TEventHandler handler)
-        where TEvent : IEvent
-        where TEventHandler : IEventHandler<TEvent>
-    {
-      if (handler == null) return;
-
-      Unsubscribe<TEvent, TEventHandler>(new[]
-      {
-                handler
-            });
-    }
-
+    /// <param name="handlers"></param>
+    public abstract void RegisterCatchAllHandler(params ICatchAllEventHandler[] handlers);
+    
     /// <summary>
     ///     <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
-    public abstract void RegisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers);
-
-    /// <summary>
-    ///     <inheritdoc />
-    /// </summary>
-    /// <param name="handler"></param>
-    public void RegisterCatchAllHandler(ICatchAllEventHandler handler)
-    {
-      if (handler == null) return;
-
-      RegisterCatchAllHandler(new[]
-      {
-                handler
-            });
-    }
-
-    /// <summary>
-    ///     <inheritdoc />
-    /// </summary>
-    /// <param name="handlers"></param>
-    public abstract void UnregisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers);
-
-    /// <summary>
-    ///     <inheritdoc />
-    /// </summary>
-    /// <param name="handler"></param>
-    public void UnregisterCatchAllHandler(ICatchAllEventHandler handler)
-    {
-      if (handler == null) return;
-
-      UnregisterCatchAllHandler(new[]
-      {
-                handler
-            });
-    }
+    public abstract void UnregisterCatchAllHandler(params ICatchAllEventHandler[] handlers);
 
     /// <summary>
     ///     Use this to release resources
@@ -190,5 +127,4 @@ namespace libc.eventbus.System
     /// </summary>
     /// <returns></returns>
     public abstract IEnumerable<ICatchAllEventHandler> GetCatchAllHandlers();
-  }
 }
