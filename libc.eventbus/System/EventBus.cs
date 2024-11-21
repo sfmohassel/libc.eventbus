@@ -99,46 +99,10 @@ namespace libc.eventbus.System
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
-    /// <param name="handler"></param>
-    public void Subscribe<TEvent, TEventHandler>(TEventHandler handler)
-      where TEvent : IEvent
-      where TEventHandler : IEventHandler<TEvent>
-    {
-      if (handler == null) return;
-
-      Subscribe<TEvent, TEventHandler>(new[]
-      {
-        handler
-      });
-    }
-
-    /// <summary>
-    ///   <inheritdoc />
-    /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
     public abstract void Unsubscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
       where TEvent : IEvent
       where TEventHandler : IEventHandler<TEvent>;
-
-    /// <summary>
-    ///   <inheritdoc />
-    /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <typeparam name="TEventHandler"></typeparam>
-    /// <param name="handler"></param>
-    public void Unsubscribe<TEvent, TEventHandler>(TEventHandler handler)
-      where TEvent : IEvent
-      where TEventHandler : IEventHandler<TEvent>
-    {
-      if (handler == null) return;
-
-      Unsubscribe<TEvent, TEventHandler>(new[]
-      {
-        handler
-      });
-    }
 
     /// <summary>
     ///   <inheritdoc />
@@ -150,14 +114,11 @@ namespace libc.eventbus.System
     ///   <inheritdoc />
     /// </summary>
     /// <param name="handler"></param>
-    public void RegisterCatchAllHandler(ICatchAllEventHandler handler)
+    public void RegisterCatchAllHandler(params ICatchAllEventHandler[] handlers)
     {
-      if (handler == null) return;
+      if (handlers == null || handlers.Length == 0) return;
 
-      RegisterCatchAllHandler(new[]
-      {
-        handler
-      });
+      RegisterCatchAllHandler(handlers.AsEnumerable());
     }
 
     /// <summary>
@@ -170,20 +131,47 @@ namespace libc.eventbus.System
     ///   <inheritdoc />
     /// </summary>
     /// <param name="handler"></param>
-    public void UnregisterCatchAllHandler(ICatchAllEventHandler handler)
+    public void UnregisterCatchAllHandler(params ICatchAllEventHandler[] handlers)
     {
-      if (handler == null) return;
+      if (handlers == null || handlers.Length == 0) return;
 
-      UnregisterCatchAllHandler(new[]
-      {
-        handler
-      });
+      UnregisterCatchAllHandler(handlers.AsEnumerable());
     }
 
     /// <summary>
     ///   Use this to release resources
     /// </summary>
     public abstract void Dispose();
+
+    /// <summary>
+    ///   <inheritdoc />
+    /// </summary>
+    /// <typeparam name="TEvent"></typeparam>
+    /// <typeparam name="TEventHandler"></typeparam>
+    /// <param name="handler"></param>
+    public void Subscribe<TEvent, TEventHandler>(params TEventHandler[] handlers)
+      where TEvent : IEvent
+      where TEventHandler : IEventHandler<TEvent>
+    {
+      if (handlers == null || handlers.Length == 0) return;
+
+      Subscribe<TEvent, TEventHandler>(handlers.AsEnumerable());
+    }
+
+    /// <summary>
+    ///   <inheritdoc />
+    /// </summary>
+    /// <typeparam name="TEvent"></typeparam>
+    /// <typeparam name="TEventHandler"></typeparam>
+    /// <param name="handler"></param>
+    public void Unsubscribe<TEvent, TEventHandler>(params TEventHandler[] handlers)
+      where TEvent : IEvent
+      where TEventHandler : IEventHandler<TEvent>
+    {
+      if (handlers == null || handlers.Length == 0) return;
+
+      Unsubscribe<TEvent, TEventHandler>(handlers.AsEnumerable());
+    }
 
     /// <summary>
     ///   Get Handlers for an event type

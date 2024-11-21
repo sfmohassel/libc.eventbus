@@ -92,14 +92,11 @@ namespace libc.eventbus.System
     {
       private volatile bool _disposing, _disposed;
 
-      public Cache()
-      {
-        CatchAllEventHandlers = new Dictionary<ICatchAllEventHandler, int>();
-        Handlers = new Dictionary<Type, IDictionary<object, int>>();
-      }
+      private IDictionary<ICatchAllEventHandler, int> CatchAllEventHandlers { get; } =
+        new Dictionary<ICatchAllEventHandler, int>();
 
-      private IDictionary<ICatchAllEventHandler, int> CatchAllEventHandlers { get; }
-      private IDictionary<Type, IDictionary<object, int>> Handlers { get; }
+      private IDictionary<Type, IDictionary<object, int>> Handlers { get; } =
+        new Dictionary<Type, IDictionary<object, int>>();
 
       public void Dispose()
       {
