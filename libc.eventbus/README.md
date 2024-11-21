@@ -2,11 +2,14 @@
 
 ## Why bother?
 
-In Domain-Driven Design (DDD) pattern, there are times when we want to inform other parts of application about occurrence of an event. This is the primary goal of [DOMAIN EVENTS](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#:~:text=A%20domain%20event%20is%2C%20something,effects%20can%20be%20expressed%20explicitly.)
+A simple and lightweight event bus that can be used in any C# project without ceremony.
+Can be used effectively in an Outbox pattern to process events in the same transaction synchronously
+while keeping application parts loosely coupled.
 
 ## Read More
 
-You can checkout my article on EventAggregator [HERE](https://sfmohassel.medium.com/event-aggregator-an-implementation-in-c-17fad5e6ed28)
+You can check out my article on
+EventAggregator [HERE](https://sfmohassel.medium.com/event-aggregator-an-implementation-in-c-17fad5e6ed28)
 
 # Installation
 
@@ -50,7 +53,8 @@ public class PrintMessagePretty : IEventHandler<SimpleMessage> {
 }
 ```
 
-As you can see both `PrintMessageRaw` and `PrintMessagePretty` implement __`IEventHandler<SimpleMessage>`__.
+As you can see both `PrintMessageRaw` and `PrintMessagePretty` implement _
+_`IEventHandler<SimpleMessage>`__.
 
 ## Put it together
 
@@ -88,7 +92,8 @@ Pretty: a simple message
 
 # Usage 2
 
-There are times that we need to catch all the event (for example for logging purposes). There's a `ICatchAllEventHandler` interface that you can
+There are times that we need to catch all the event (for example for logging purposes). There's a
+`ICatchAllEventHandler` interface that you can
 register in the bus. To test it, first add a new event:
 
 ```csharp
@@ -150,6 +155,6 @@ Pretty: a simple message
 Caught SimpleMessage: a simple message
 ```
 
-To see the full showcase __[click here](./libc.eventbus.tests/ShowCase.cs)__
+To see the full showcase __[click here](../libc.eventbus.tests/ShowCase.cs)__
 
-## Contributions are welcome
+### Contributions are welcome

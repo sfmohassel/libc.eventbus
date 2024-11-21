@@ -1,19 +1,20 @@
-﻿using libc.eventbus.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using libc.eventbus.Types;
 
 namespace libc.eventbus.System
 {
   /// <summary>
-  ///     An abstract event-bus that implements both <see cref="IEventEmitter" /> and <see cref="IEventSink" />
-  ///     Implement this to have your own bus :-)
+  ///   An abstract event-bus that implements both <see cref="IEventEmitter" /> and
+  ///   <see cref="IEventSink" />
+  ///   Implement this to have your own bus :-)
   /// </summary>
   public abstract class EventBus : IEventEmitter, IEventSink
   {
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <param name="ev"></param>
@@ -22,7 +23,8 @@ namespace libc.eventbus.System
       return PublishAsync(ev).Result;
     }
 
-    public async Task<EventPublishResult<TEvent>> PublishAsync<TEvent>(TEvent ev) where TEvent : IEvent
+    public async Task<EventPublishResult<TEvent>> PublishAsync<TEvent>(TEvent ev)
+      where TEvent : IEvent
     {
       var handlerResults = new List<EventPublishHandlerResult<TEvent>>();
       var catchAllResults = new List<EventPublishCatchAllHandlerResult>();
@@ -38,11 +40,13 @@ namespace libc.eventbus.System
         try
         {
           await handler.Handle(ev);
-          x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.Executed, null);
+          x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.Executed,
+            null);
         }
         catch (Exception ex)
         {
-          x = new EventPublishHandlerResult<TEvent>(handler, EventHandlerExecutionCode.UnhandledException, ex);
+          x = new EventPublishHandlerResult<TEvent>(handler,
+            EventHandlerExecutionCode.UnhandledException, ex);
         }
         finally
         {
@@ -58,12 +62,14 @@ namespace libc.eventbus.System
         try
         {
           await handler.Handle(ev);
-          x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.Executed, null);
+          x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.Executed,
+            null);
         }
         catch (Exception ex)
         {
-          x = new EventPublishCatchAllHandlerResult(handler, EventHandlerExecutionCode.UnhandledException,
-              ex);
+          x = new EventPublishCatchAllHandlerResult(handler,
+            EventHandlerExecutionCode.UnhandledException,
+            ex);
         }
         finally
         {
@@ -74,73 +80,74 @@ namespace libc.eventbus.System
       // store end time
       var end = DateTime.UtcNow;
 
-      return new EventPublishResult<TEvent>(handlerResults.ToArray(), catchAllResults.ToArray(), start, end);
+      return new EventPublishResult<TEvent>(handlerResults.ToArray(), catchAllResults.ToArray(),
+        start, end);
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
     public abstract void Subscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
-        where TEvent : IEvent
-        where TEventHandler : IEventHandler<TEvent>;
+      where TEvent : IEvent
+      where TEventHandler : IEventHandler<TEvent>;
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handler"></param>
     public void Subscribe<TEvent, TEventHandler>(TEventHandler handler)
-        where TEvent : IEvent
-        where TEventHandler : IEventHandler<TEvent>
+      where TEvent : IEvent
+      where TEventHandler : IEventHandler<TEvent>
     {
       if (handler == null) return;
 
       Subscribe<TEvent, TEventHandler>(new[]
       {
-                handler
-            });
+        handler
+      });
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handlers"></param>
     public abstract void Unsubscribe<TEvent, TEventHandler>(IEnumerable<TEventHandler> handlers)
-        where TEvent : IEvent
-        where TEventHandler : IEventHandler<TEvent>;
+      where TEvent : IEvent
+      where TEventHandler : IEventHandler<TEvent>;
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
     /// <param name="handler"></param>
     public void Unsubscribe<TEvent, TEventHandler>(TEventHandler handler)
-        where TEvent : IEvent
-        where TEventHandler : IEventHandler<TEvent>
+      where TEvent : IEvent
+      where TEventHandler : IEventHandler<TEvent>
     {
       if (handler == null) return;
 
       Unsubscribe<TEvent, TEventHandler>(new[]
       {
-                handler
-            });
+        handler
+      });
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
     public abstract void RegisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers);
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <param name="handler"></param>
     public void RegisterCatchAllHandler(ICatchAllEventHandler handler)
@@ -149,18 +156,18 @@ namespace libc.eventbus.System
 
       RegisterCatchAllHandler(new[]
       {
-                handler
-            });
+        handler
+      });
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
     public abstract void UnregisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers);
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <param name="handler"></param>
     public void UnregisterCatchAllHandler(ICatchAllEventHandler handler)
@@ -169,24 +176,24 @@ namespace libc.eventbus.System
 
       UnregisterCatchAllHandler(new[]
       {
-                handler
-            });
+        handler
+      });
     }
 
     /// <summary>
-    ///     Use this to release resources
+    ///   Use this to release resources
     /// </summary>
     public abstract void Dispose();
 
     /// <summary>
-    ///     Get Handlers for an event type
+    ///   Get Handlers for an event type
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     public abstract IEnumerable<IEventHandler<TEvent>> GetHandlers<TEvent>() where TEvent : IEvent;
 
     /// <summary>
-    ///     Get all catch-all handlers
+    ///   Get all catch-all handlers
     /// </summary>
     /// <returns></returns>
     public abstract IEnumerable<ICatchAllEventHandler> GetCatchAllHandlers();

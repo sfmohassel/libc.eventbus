@@ -1,24 +1,20 @@
-﻿using libc.eventbus.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using libc.eventbus.Types;
 
 namespace libc.eventbus.System
 {
   /// <summary>
-  ///     A default implementation for <see cref="EventBus" /> which uses an internal cache for subscriptions
+  ///   A default implementation for <see cref="EventBus" /> which uses an internal cache for
+  ///   subscriptions
   /// </summary>
   public class DefaultEventBus : EventBus
   {
-    private readonly Cache _cache;
-
-    public DefaultEventBus()
-    {
-      _cache = new Cache();
-    }
+    private readonly Cache _cache = new Cache();
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
     public override void RegisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers)
@@ -29,7 +25,7 @@ namespace libc.eventbus.System
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <param name="handlers"></param>
     public override void UnregisterCatchAllHandler(IEnumerable<ICatchAllEventHandler> handlers)
@@ -40,7 +36,7 @@ namespace libc.eventbus.System
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
@@ -53,7 +49,7 @@ namespace libc.eventbus.System
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TEventHandler"></typeparam>
@@ -66,7 +62,7 @@ namespace libc.eventbus.System
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <returns></returns>
     public override IEnumerable<ICatchAllEventHandler> GetCatchAllHandlers()
@@ -75,7 +71,7 @@ namespace libc.eventbus.System
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
@@ -85,7 +81,7 @@ namespace libc.eventbus.System
     }
 
     /// <summary>
-    ///     <inheritdoc />
+    ///   <inheritdoc />
     /// </summary>
     public override void Dispose()
     {
@@ -149,25 +145,25 @@ namespace libc.eventbus.System
         if (_disposing || _disposed) return;
         var type = typeof(TEvent);
 
-        if (!Handlers.ContainsKey(type)) return;
-        Handlers[type].Remove(handler);
+        if (!Handlers.TryGetValue(type, out var handle)) return;
+        handle.Remove(handler);
       }
 
       public IEnumerable<ICatchAllEventHandler> GetAllCatchAllHandlers()
       {
-        if (_disposing || _disposed) return new ICatchAllEventHandler[0];
+        if (_disposing || _disposed) return Array.Empty<ICatchAllEventHandler>();
 
         return CatchAllEventHandlers.Keys;
       }
 
       public IEnumerable<IEventHandler<TEvent>> GetHandlers<TEvent>() where TEvent : IEvent
       {
-        if (_disposing || _disposed) return new IEventHandler<TEvent>[0];
+        if (_disposing || _disposed) return Array.Empty<IEventHandler<TEvent>>();
         var type = typeof(TEvent);
 
-        if (!Handlers.ContainsKey(type)) return new IEventHandler<TEvent>[0];
-
-        return Handlers[type].Keys.OfType<IEventHandler<TEvent>>();
+        return !Handlers.TryGetValue(type, out var handler)
+          ? Array.Empty<IEventHandler<TEvent>>()
+          : handler.Keys.OfType<IEventHandler<TEvent>>();
       }
     }
   }
