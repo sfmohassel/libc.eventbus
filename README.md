@@ -1,4 +1,4 @@
-# An in-memory event bus without any dependency in C #
+# An in-memory event aggregator without any dependency
 
 ## Why bother?
 
